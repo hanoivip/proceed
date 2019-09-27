@@ -55,7 +55,7 @@ class ProceedController
     }
     public function doClick(Request $request)
     {
-        $clientIp = '';
+        $clientIp = $request->headers->get('X-Real-IP');//Cloudflare proxy
         $rules = ['captcha' => 'required|captcha', 'code' => 'required'];
         $code = $request->input('code');
         $validator = validator()->make(request()->all(), $rules);
