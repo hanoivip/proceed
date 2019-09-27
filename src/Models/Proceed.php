@@ -1,6 +1,6 @@
 <?php
 
-namespace \Hanoivip\Proceed\Models;
+namespace Hanoivip\Proceed\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;

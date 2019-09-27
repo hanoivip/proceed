@@ -1,21 +1,23 @@
 <?php
+namespace Hanoivip\Proceed\Controllers;
 
-use GuzzleHttp\Psr7\Request;
 use Hanoivip\Proceed\Serivces\ProceedService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-
-namespace \Hanoivip\Proceed\Controllers;
+use Exception;
 
 class ProceedController
 {
     private $proceed;
     
+    const LOCK = "ProceedClient";
+    
     public function __construct(ProceedService $proceed)
     {
         $this->proceed = $proceed;
     }
-    
     /**
      * View user's info
      * + proceed link
@@ -28,6 +30,7 @@ class ProceedController
         $code= $this->proceed->generateCode($uid);
         $link = env('APP_URL') . '/proc/' . $code;
         $count = $this->proceed->getCount($uid);
+        Log::debug($link);
         return view('hanoivip::proceed-home', ['link' => $link, 'count' => $count]);
     }
     /**
@@ -37,6 +40,7 @@ class ProceedController
     public function exchange(Request $request)
     {
         $uid = Auth::user()->getAuthIdentifier();
+        return view('hanoivip::proceed-exchange-result');
     }
     /**
      * View user's proceed link
@@ -46,36 +50,43 @@ class ProceedController
      */
     public function click(Request $request, $code)
     {
-        return view('hanoivip::click', ['code' => $code]);
+        return view('hanoivip::proceed-click', ['code' => $code]);
         
     }
     public function doClick(Request $request)
     {
-        $rules = ['captcha' => 'required|captcha'];
+        $clientIp = '';
+        $rules = ['captcha' => 'required|captcha', 'code' => 'required'];
         $code = $request->input('code');
         $validator = validator()->make(request()->all(), $rules);
         if ($validator->fails()) 
         {
-            return view('hanoivip::proceed-click', ['code' => $code, 'error' => 'Captcha fail']);
+            return view('hanoivip::proceed-click', ['code' => $code, 'error' => __('hanoivip::proceed.captcha')]);
         } 
         else 
         {
             try 
             {
-                $result = $this->proceed->proceed($code);
+                $lock = Cache::lock(self::LOCK . $clientIp);
+                $result = -1;
+                if ($lock->get())
+                {
+                    $result = $this->proceed->proceed($clientIp, $code);
+                    $lock->release();
+                }
                 if ($result === true)
                 {
-                    return view('hanoivip::proceed-click-result', ['error' => __('proceed.success')]);
+                    return view('hanoivip::proceed-click-result', ['error' => __('hanoivip::proceed.success')]);
                 }
-                else 
+                else
                 {
-                    return view('hanoivip::proceed-click-result', ['message' => __('proceed.fail.' . $result)]);
+                    return view('hanoivip::proceed-click-result', ['message' => __('hanoivip::proceed.fail.' . $result)]);
                 }
             } 
             catch (Exception $ex) 
             {
                 Log::error('Proceed exception:' . $ex->getMessage());
-                return view('hanoivip::proceed-click-result', ['code' => $code, 'error' => __('proceed.exception')]);
+                return view('hanoivip::proceed-click-result', ['code' => $code, 'error' => __('hanoivip::proceed.exception')]);
             }
             
         }

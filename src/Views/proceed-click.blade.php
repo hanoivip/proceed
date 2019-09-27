@@ -17,7 +17,10 @@ Note: chú ý preview page này!!!
 <form method="post" action="{{route('proceed.click')}}">
 	@csrf
 	<input type="hidden" id="code" name="code" value="{{$code}}"/>
-	{{ captcha_img() }}
+	{!! captcha_img() !!}
+	<br/>
+	Nhập mã trên: <input type="text" id="captcha" name="captcha"/>
+	<br/>
 	<button type="submit">Xúc tiến</button>
 </form>	
 
