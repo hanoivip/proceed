@@ -28,7 +28,7 @@ class ProceedController
     {
         $uid = Auth::user()->getAuthIdentifier();
         $code= $this->proceed->generateCode($uid);
-        $link = env('APP_URL') . '/proc/' . $code;
+        $link = url('/proc/' . $code);
         $count = $this->proceed->getCount($uid);
         Log::debug($link);
         return view('hanoivip::proceed-home', ['link' => $link, 'count' => $count]);
@@ -76,11 +76,11 @@ class ProceedController
                 }
                 if ($result === true)
                 {
-                    return view('hanoivip::proceed-click-result', ['error' => __('hanoivip::proceed.success')]);
+                    return view('hanoivip::proceed-click-result', ['message' => __('hanoivip::proceed.success')]);
                 }
                 else
                 {
-                    return view('hanoivip::proceed-click-result', ['message' => __('hanoivip::proceed.fail.' . $result)]);
+                    return view('hanoivip::proceed-click-result', ['error' => __('hanoivip::proceed.fail.' . $result)]);
                 }
             } 
             catch (Exception $ex) 
