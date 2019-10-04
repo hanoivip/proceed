@@ -2,10 +2,12 @@
 
 namespace Hanoivip\Proceed\Serivces;
 
+use Hanoivip\PaymentClient\BalanceUtil;
 use Hanoivip\Proceed\Models\Proceed;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Hanoivip\Proceed\Models\ProceedHistory;
 
 class ProceedService
 {
@@ -19,15 +21,55 @@ class ProceedService
     
     const PROCEED_LIST = "ProceedList";
     
+    private $balance;
+    
+    public function __construct(BalanceUtil $balance)
+    {
+        $this->balance = $balance;
+    }
+    
     public function generateCode($uid)
     {
         $code = openssl_encrypt($uid, 'AES-128-ECB', self::KEY, OPENSSL_RAW_DATA);
         return base64_encode($code);
     }
-    
+    /**
+     * Chuyển toàn bộ số điểm qua xu web
+     * @param number $uid
+     * @return number|true true when success, fail return error number
+     */
     public function exchange($uid)
     {
-        
+        $record = Proceed::where('user_id', $uid)->get();
+        $count = 0;
+        if ($record->isNotEmpty())
+        {
+            $record = $record->first();
+            $count = $record->proceed;
+        }
+        $result = 1;
+        if (!empty($count))
+        {
+            $result = 2;
+            $rate = config('proceed.webcoin-rate', 100);
+            $coin = intval($rate * $count);
+            $coin_type = intval(config('proceed.webcoin-type', 0));
+            if ($this->balance->add($uid, $coin, "Proceed", $coin_type))
+            {
+                $record->proceed = 0;
+                $record->save();
+                // Save history
+                $result = 0;
+            }
+            // Save history
+            $history = new ProceedHistory();
+            $history->user_id = $uid;
+            $history->point = $count;
+            $history->gain_coin = $coin;
+            $history->result = $result;
+            $history->save();
+        }
+        return $result == 0 ? true : $result;
     }
     
     public function getCount($uid)

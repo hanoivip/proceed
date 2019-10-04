@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('web', 'auth:web')->namespace('Hanoivip\Proceed\Controllers')->group(function () {
     Route::get('/proc', 'ProceedController@home')->name('proceed');
     Route::post('/proc/exchange', 'ProceedController@exchange')->name('proceed.exchange');
+    Route::get('/proc/history', 'ProceedController@history')->name('proceed.history');
 });
 
 // Public UI

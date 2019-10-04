@@ -14,6 +14,12 @@
 			"options" : {
 				"symlink" : true
 			}
+		}, {
+			"type" : "path",
+			"url" : "../payment-client",
+			"options" : {
+				"symlink" : true
+			}
 		}
 	],
 	"require" : {
@@ -23,7 +29,8 @@
 		"laravel/tinker" : "~1.0",
 		"mervick/curl-helper" : "^1.1",
 		"mews/captcha": "^2.1",
-		"hanoivip/events" : "dev-master"
+		"hanoivip/events" : "dev-master",
+		"hanoivip/payment-client" : "dev-master"
 	},
 	"extra" : {
 		"laravel" : {

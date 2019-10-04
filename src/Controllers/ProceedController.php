@@ -39,8 +39,31 @@ class ProceedController
      */
     public function exchange(Request $request)
     {
+        $clientIp = $request->headers->get('X-Real-IP');//Cloudflare proxy
         $uid = Auth::user()->getAuthIdentifier();
-        return view('hanoivip::proceed-exchange-result');
+        try
+        {
+            $lock = Cache::lock(self::LOCK . $clientIp);
+            $result = -1;
+            if ($lock->get())
+            {
+                $result = $this->proceed->exchange($uid);
+                $lock->release();
+            }
+            if ($result === true)
+            {
+                return view('hanoivip::proceed-exchange-result', ['message' => __('hanoivip::proceed.exchange.success')]);
+            }
+            else 
+            {
+                return view('hanoivip::proceed-exchange-result', ['message' => __('hanoivip::proceed.exchange.fail' . $result)]);
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::error("Proceed exchange exception: " . $ex->getMessage());
+            return view('hanoivip::proceed-exchange-result', ['error' => __('proceed.exchange.exception')]);
+        }
     }
     /**
      * View user's proceed link
@@ -92,4 +115,8 @@ class ProceedController
         }
     }
     
+    public function history(Request $request)
+    {
+        
+    }
 }

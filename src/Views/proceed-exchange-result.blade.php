@@ -4,6 +4,13 @@
 
 @section('content')
 
-Cứ chăm chỉ mời bạn xúc tiến hộ đi, mấy hôm nữa có thể chuyển đc thành xu!
+@if (isset($error))
+<p>{{$error}}</p>
+@endif
+
+@if (isset($message))
+<p>{{$message}}</p>
+@endif
+
 
 @endsection
