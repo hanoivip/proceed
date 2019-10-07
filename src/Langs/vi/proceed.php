@@ -16,6 +16,7 @@ return [
             0 => 'Đổi điểm thành công, hãy kiểm tra lịch sử nạp/chuyển',
             1 => 'Chưa có điểm để chuyển',
             2 => 'Đổi điểm không thành công, thử lại trước khi liên hệ hỗ trợ',
+            3 => 'Phải có ít nhất 10 điểm mới có thể đổi',
         ],
         'exception' => 'Lỗi xảy ra, liên hệ hỗ trợ.'
     ],

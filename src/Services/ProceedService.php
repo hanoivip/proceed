@@ -50,6 +50,10 @@ class ProceedService
         $result = 1;
         if (!empty($count))
         {
+            if ($count < 10)
+            {
+                return 3;
+            }
             $result = 2;
             $rate = config('proceed.webcoin-rate', 100);
             $coin = intval($rate * $count);

@@ -28,7 +28,7 @@ class ProceedController
     {
         $uid = Auth::user()->getAuthIdentifier();
         $code= $this->proceed->generateCode($uid);
-        $link = url('/proc/' . $code);
+        $link = url('/proc?code=' . $code);
         $count = $this->proceed->getCount($uid);
         Log::debug($link);
         return view('hanoivip::proceed-home', ['link' => $link, 'count' => $count]);
@@ -73,6 +73,12 @@ class ProceedController
      */
     public function click(Request $request, $code)
     {
+        return view('hanoivip::proceed-click', ['code' => $code]);
+        
+    }
+    public function click2(Request $request)
+    {
+        $code = $request->input('code');
         return view('hanoivip::proceed-click', ['code' => $code]);
         
     }
