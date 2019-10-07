@@ -117,7 +117,10 @@ class ProceedController
                 Log::error('Proceed exception:' . $ex->getMessage());
                 return view('hanoivip::proceed-click-result', ['code' => $code, 'error' => __('hanoivip::proceed.exception')]);
             }
-            
+            finally 
+            {
+                optional($lock)->release();
+            }
         }
     }
     
