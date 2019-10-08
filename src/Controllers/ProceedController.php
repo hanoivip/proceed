@@ -43,7 +43,7 @@ class ProceedController
         $uid = Auth::user()->getAuthIdentifier();
         try
         {
-            $lock = Cache::lock(self::LOCK . $clientIp);
+            $lock = Cache::lock(self::LOCK . $clientIp, 5);
             $result = -1;
             if ($lock->get())
             {
@@ -56,13 +56,17 @@ class ProceedController
             }
             else 
             {
-                return view('hanoivip::proceed-exchange-result', ['message' => __('hanoivip::proceed.exchange.fail' . $result)]);
+                return view('hanoivip::proceed-exchange-result', ['message' => __('hanoivip::proceed.exchange.fail.' . $result)]);
             }
         }
         catch (Exception $ex)
         {
             Log::error("Proceed exchange exception: " . $ex->getMessage());
             return view('hanoivip::proceed-exchange-result', ['error' => __('proceed.exchange.exception')]);
+        }
+        finally
+        {
+            optional($lock)->release();
         }
     }
     /**
