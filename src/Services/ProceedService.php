@@ -114,7 +114,7 @@ class ProceedService
         // Processing
         $interval = config('proceed.interval-per-ip', 15);
         $expires = now()->addMinutes($interval);
-        $lock =  Cache::lock(self::PROCEED_LOCK);
+        $lock =  Cache::lock(self::PROCEED_LOCK, 5);
         try 
         {
             if ($lock->get())

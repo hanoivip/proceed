@@ -96,7 +96,7 @@ class ProceedController
         {
             try 
             {
-                $lock = Cache::lock(self::LOCK . $clientIp);
+                $lock = Cache::lock(self::LOCK . $clientIp, 8);
                 $result = -1;
                 if ($lock->get())
                 {
