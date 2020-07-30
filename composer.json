@@ -16,7 +16,7 @@
 			}
 		}, {
 			"type" : "path",
-			"url" : "../payment-client",
+			"url" : "../gate-client",
 			"options" : {
 				"symlink" : true
 			}
@@ -30,7 +30,7 @@
 		"mervick/curl-helper" : "^1.1",
 		"mews/captcha": "^2.1",
 		"hanoivip/events" : "dev-master",
-		"hanoivip/payment-client" : "dev-master"
+		"hanoivip/gate-client" : "dev-master"
 	},
 	"extra" : {
 		"laravel" : {

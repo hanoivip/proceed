@@ -2,7 +2,7 @@
 
 namespace Hanoivip\Proceed\Serivces;
 
-use Hanoivip\PaymentClient\BalanceUtil;
+use Hanoivip\GateClient\Facades\BalanceFacade;
 use Hanoivip\Proceed\Models\Proceed;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -20,13 +20,6 @@ class ProceedService
     const PROCEED_LOCK = "ProceedLock";
     
     const PROCEED_LIST = "ProceedList";
-    
-    private $balance;
-    
-    public function __construct(BalanceUtil $balance)
-    {
-        $this->balance = $balance;
-    }
     
     public function generateCode($uid)
     {
@@ -58,7 +51,7 @@ class ProceedService
             $rate = config('proceed.webcoin-rate', 100);
             $coin = intval($rate * $count);
             $coin_type = intval(config('proceed.webcoin-type', 0));
-            if ($this->balance->add($uid, $coin, "Proceed", $coin_type))
+            if (BalanceFacade::add($uid, $coin, "Proceed", $coin_type))
             {
                 $record->proceed = 0;
                 $record->save();
