@@ -1,6 +1,6 @@
 <?php
 
-namespace Hanoivip\Proceed\Serivces;
+namespace Hanoivip\Proceed\Services;
 
 use Hanoivip\GateClient\Facades\BalanceFacade;
 use Hanoivip\Proceed\Models\Proceed;

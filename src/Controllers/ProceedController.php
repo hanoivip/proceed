@@ -1,7 +1,7 @@
 <?php
 namespace Hanoivip\Proceed\Controllers;
 
-use Hanoivip\Proceed\Serivces\ProceedService;
+use Hanoivip\Proceed\Services\ProceedService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;

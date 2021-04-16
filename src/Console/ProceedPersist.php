@@ -5,7 +5,7 @@ namespace Hanoivip\Proceed\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use Hanoivip\Proceed\Serivces\ProceedService;
+use Hanoivip\Proceed\Services\ProceedService;
 
 class ProceedPersist extends Command
 {

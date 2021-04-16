@@ -30,7 +30,7 @@
 		"mervick/curl-helper" : "^1.1",
 		"mews/captcha": "^2.1",
 		"hanoivip/events" : "dev-master",
-		"hanoivip/gate-client" : "dev-master"
+		"hanoivip/gate-client" : "dev-main"
 	},
 	"extra" : {
 		"laravel" : {
